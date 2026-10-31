@@ -977,6 +977,89 @@ select:focus-visible {
   inset: 19% 27%;
 }
 
+.template-preview {
+  container-type: inline-size;
+  background: #fffdf8;
+}
+
+.template-preview::before,
+.template-preview::after {
+  display: none;
+}
+
+.certificate-template-artwork {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.template-recipient-name {
+  position: absolute;
+  z-index: 1;
+  left: 18%;
+  display: block;
+  width: 64%;
+  overflow: hidden;
+  color: #252548;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(8px, 3.6cqw, 23px);
+  font-weight: 700;
+  line-height: 1.05;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.template-preview--first-place .template-recipient-name,
+.template-preview--second-place .template-recipient-name,
+.template-preview--third-place .template-recipient-name {
+  top: 38.7%;
+}
+
+.template-preview--top-10 .template-recipient-name {
+  top: 37.8%;
+}
+
+.template-preview--participation .template-recipient-name {
+  top: 46.4%;
+}
+
+.template-preview--coordination .template-recipient-name {
+  top: 43.6%;
+}
+
+.template-overlay-field {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  overflow: hidden;
+  background: #fff;
+  color: #1d1c23;
+  font-family: Georgia, 'Times New Roman', serif;
+  text-align: center;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.template-place-rank {
+  top: 50.3%;
+  left: 36.2%;
+  width: 8.8%;
+  font-size: clamp(6px, 2cqw, 12px);
+  line-height: 1.2;
+}
+
+.template-team-name {
+  top: 54.7%;
+  left: 21.2%;
+  width: 20.5%;
+  font-size: clamp(4px, 1.6cqw, 9px);
+  line-height: 1.2;
+}
+
 .certificate-preview-frame {
   position: absolute;
   inset: 3.1%;

@@ -26,7 +26,6 @@ import {
   autoMapColumns,
   buildRecipients,
   CERTIFICATE_TYPES,
-  DEFAULT_EVENT_NAME,
   EMPTY_COLUMN_MAPPING,
   type CertificateType,
   type ColumnMapping,
@@ -90,7 +89,6 @@ export function CertificateStudio() {
   const [mapping, setMapping] = useState<ColumnMapping>(EMPTY_COLUMN_MAPPING)
   const [recipientMode, setRecipientMode] = useState<RecipientMode>('individual')
   const [sortMode, setSortMode] = useState<SortMode>('rank')
-  const [eventName, setEventName] = useState(DEFAULT_EVENT_NAME)
   const [error, setError] = useState('')
   const [feedback, setFeedback] = useState('')
   const [isDragging, setIsDragging] = useState(false)
@@ -114,8 +112,11 @@ export function CertificateStudio() {
 
   const setTypeFromHash = useCallback(() => {
     const hash = window.location.hash.slice(1)
-    if (isCertificateType(hash)) setActiveType(hash)
-  }, [])
+    if (isCertificateType(hash)) {
+      setActiveType(hash)
+      setRecipientMode(hash === 'top-10' && Boolean(mapping.team) ? 'team' : 'individual')
+    }
+  }, [mapping.team])
 
   useEffect(() => {
     setTypeFromHash()
@@ -131,7 +132,7 @@ export function CertificateStudio() {
     setActiveType(type)
     setFeedback('')
     window.history.pushState(null, '', `#${type}`)
-    if (type === 'top-10' && mapping.team) setRecipientMode('team')
+    setRecipientMode(type === 'top-10' && Boolean(mapping.team) ? 'team' : 'individual')
   }
 
   const handleFile = async (file?: File) => {
@@ -227,7 +228,7 @@ export function CertificateStudio() {
     setFeedback('')
     try {
       const { downloadSingleCertificate } = await import('@/lib/certificate-export')
-      downloadSingleCertificate(activeType, recipient, eventName)
+      await downloadSingleCertificate(activeType, recipient)
       setFeedback(`Certificate for ${recipient.name} downloaded.`)
     } catch (caughtError) {
       console.error('[v0] Single certificate export failed:', caughtError)
@@ -242,7 +243,7 @@ export function CertificateStudio() {
     setFeedback('')
     try {
       const { downloadCertificateBatch } = await import('@/lib/certificate-export')
-      await downloadCertificateBatch(activeType, recipients, eventName)
+      await downloadCertificateBatch(activeType, recipients)
       setFeedback(`${recipients.length} individual PDF${recipients.length === 1 ? '' : 's'} are ready in a ZIP file.`)
     } catch (caughtError) {
       console.error('[v0] Certificate batch export failed:', caughtError)
@@ -460,10 +461,6 @@ export function CertificateStudio() {
                         </div>
                       </div>
 
-                      <label className="event-name-field">
-                        <span className="field-label">Event name on certificates</span>
-                        <input className="control-input" value={eventName} onChange={(event) => setEventName(event.target.value)} maxLength={80} />
-                      </label>
                     </>
                   )}
 
@@ -563,7 +560,7 @@ export function CertificateStudio() {
               </div>
 
               <div className="preview-stage">
-                <CertificatePreview type={activeType} eventName={eventName} recipient={previewRecipient} />
+                <CertificatePreview type={activeType} recipient={previewRecipient} />
                 <div className="preview-footer">
                   <span><BadgeCheck size={12} aria-hidden="true" /> Landscape A4</span>
                   <span>Gold frame · <strong>{selectedCertificate.title}</strong></span>

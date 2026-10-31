@@ -6,6 +6,7 @@ export const CERTIFICATE_TYPES = [
     eyebrow: 'CERTIFICATE OF ACHIEVEMENT',
     subtitle: 'FIRST PLACE',
     icon: 'first',
+    templateUrl: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/first-sCmKOtw6WqSNcAoWlQdKrQky2kAeYI.png',
   },
   {
     id: 'second-place',
@@ -14,6 +15,7 @@ export const CERTIFICATE_TYPES = [
     eyebrow: 'CERTIFICATE OF ACHIEVEMENT',
     subtitle: 'SECOND PLACE',
     icon: 'second',
+    templateUrl: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/first-sCmKOtw6WqSNcAoWlQdKrQky2kAeYI.png',
   },
   {
     id: 'third-place',
@@ -22,6 +24,7 @@ export const CERTIFICATE_TYPES = [
     eyebrow: 'CERTIFICATE OF ACHIEVEMENT',
     subtitle: 'THIRD PLACE',
     icon: 'third',
+    templateUrl: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/first-sCmKOtw6WqSNcAoWlQdKrQky2kAeYI.png',
   },
   {
     id: 'top-10',
@@ -30,6 +33,7 @@ export const CERTIFICATE_TYPES = [
     eyebrow: 'CERTIFICATE OF ACHIEVEMENT',
     subtitle: 'TOP 10 TEAM',
     icon: 'top',
+    templateUrl: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/top%2010-9WSeSWjMD9B4SNi0C9t9UFmWwzAWMr.png',
   },
   {
     id: 'participation',
@@ -38,6 +42,7 @@ export const CERTIFICATE_TYPES = [
     eyebrow: 'CERTIFICATE',
     subtitle: 'OF PARTICIPATION',
     icon: 'participation',
+    templateUrl: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/participation-yOMZGZAZbTXakRVqXn3XUbduCvKmIr.png',
   },
   {
     id: 'coordination',
@@ -46,6 +51,7 @@ export const CERTIFICATE_TYPES = [
     eyebrow: 'CERTIFICATE',
     subtitle: 'FOR COORDINATION',
     icon: 'coordination',
+    templateUrl: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/coordination-bNhjkiq4FDodJGIVuvaLd0UeNiHOOr.png',
   },
 ] as const
 
@@ -75,8 +81,6 @@ export type Recipient = {
   sourceRow: number
 }
 
-export const DEFAULT_EVENT_NAME = 'CareerXOrigin HackFest 2026'
-
 export const EMPTY_COLUMN_MAPPING: ColumnMapping = {
   name: '',
   team: '',
@@ -87,25 +91,6 @@ export const EMPTY_COLUMN_MAPPING: ColumnMapping = {
 
 export function getCertificateConfig(type: CertificateType) {
   return CERTIFICATE_TYPES.find((certificate) => certificate.id === type) ?? CERTIFICATE_TYPES[4]
-}
-
-export function getCertificateMessage(type: CertificateType, eventName: string) {
-  const event = eventName.trim() || DEFAULT_EVENT_NAME
-
-  switch (type) {
-    case 'first-place':
-      return `In recognition of achieving first place at ${event}. Your creativity, technical excellence, and collaborative spirit set an inspiring standard.`
-    case 'second-place':
-      return `In recognition of achieving second place at ${event}. Your thoughtful work, teamwork, and determination made an outstanding impression.`
-    case 'third-place':
-      return `In recognition of achieving third place at ${event}. Your skill, persistence, and creative approach are worthy of celebration.`
-    case 'top-10':
-      return `In recognition of being selected among the Top 10 teams at ${event}. Your innovation, teamwork, and commitment to solving real-world challenges are commendable.`
-    case 'participation':
-      return `In recognition of your enthusiastic participation in ${event}. Thank you for sharing your ideas, creativity, and energy with the community.`
-    case 'coordination':
-      return `In recognition of your dedicated efforts and active coordination for ${event}. Your commitment, teamwork, and enthusiasm helped make the event a success.`
-  }
 }
 
 export function autoMapColumns(headers: string[]): ColumnMapping {

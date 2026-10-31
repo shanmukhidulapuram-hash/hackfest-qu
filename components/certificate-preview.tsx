@@ -2,65 +2,44 @@
 
 import {
   getCertificateConfig,
-  getCertificateMessage,
   type CertificateType,
   type Recipient,
 } from '@/lib/certificate-config'
 
 type CertificatePreviewProps = {
   type: CertificateType
-  eventName: string
   recipient: Recipient | null
 }
 
-export function CertificatePreview({ type, eventName, recipient }: CertificatePreviewProps) {
+function getPlaceLabel(type: CertificateType) {
+  if (type === 'first-place') return '1st'
+  if (type === 'second-place') return '2nd'
+  return '3rd'
+}
+
+export function CertificatePreview({ type, recipient }: CertificatePreviewProps) {
   const certificate = getCertificateConfig(type)
-  const name = recipient?.name || 'Taylor Morgan'
-  const team = recipient?.team
-  const members = recipient?.members ?? []
+  const recipientName = recipient?.name || 'Taylor Morgan'
+  const isPlacement = type === 'first-place' || type === 'second-place' || type === 'third-place'
 
   return (
-    <div className="certificate-preview" aria-label={`${certificate.title} certificate preview`}>
-      <div className="certificate-preview-frame" />
-      <div className="certificate-preview-inner">
-        <div className="certificate-preview-brand" aria-label="CareerX Origin">
-          <span className="certificate-brand-mark" aria-hidden="true">
-            <span />
-          </span>
-          <span className="certificate-brand-name">CAREERX</span>
-          <span className="certificate-brand-origin">ORIGIN</span>
-        </div>
-
-        <div className="certificate-preview-heading">
-          <p className="certificate-eyebrow">{certificate.eyebrow}</p>
-          <p className="certificate-subtitle">{certificate.subtitle}</p>
-        </div>
-
-        <div className="certificate-presented">
-          <span>Proudly presented to</span>
-          <strong>{name}</strong>
-          {team && team !== name ? <small>{team}</small> : null}
-          {members.length > 0 && (team === name || !team) ? <small>{members.join(' · ')}</small> : null}
-        </div>
-
-        <p className="certificate-message">{getCertificateMessage(type, eventName)}</p>
-
-        <div className="certificate-signatures" aria-hidden="true">
-          <div className="certificate-signature">
-            <span className="certificate-signature-line" />
-            <strong>Event organizers</strong>
-            <small>CareerXOrigin</small>
-          </div>
-          <div className="certificate-preview-seal">
-            <span>✦</span>
-          </div>
-          <div className="certificate-signature">
-            <span className="certificate-signature-line" />
-            <strong>Certificate of recognition</strong>
-            <small>{eventName || 'CareerXOrigin HackFest 2026'}</small>
-          </div>
-        </div>
-      </div>
+    <div
+      className={`certificate-preview template-preview template-preview--${type}`}
+      aria-label={`${certificate.title} certificate preview`}
+    >
+      <img
+        className="certificate-template-artwork"
+        src={certificate.templateUrl}
+        alt={`${certificate.title} CareerXOrigin certificate artwork`}
+        crossOrigin="anonymous"
+      />
+      <span className="template-recipient-name">{recipientName}</span>
+      {isPlacement ? (
+        <>
+          <span className="template-overlay-field template-place-rank">{getPlaceLabel(type)}</span>
+          <span className="template-overlay-field template-team-name">{recipient?.team ?? ''}</span>
+        </>
+      ) : null}
     </div>
   )
 }
