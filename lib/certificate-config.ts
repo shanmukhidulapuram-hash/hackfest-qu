@@ -120,6 +120,42 @@ export function parseRank(value: string): number | null {
   return match ? Number.parseInt(match[0], 10) : null
 }
 
+function groupRecipientsByTeam(source: Recipient[]): Recipient[] {
+  const groups = new Map<string, Recipient>()
+
+  for (const recipient of source) {
+    const groupName = recipient.team || recipient.name
+    const key = groupName.trim().toLocaleLowerCase()
+    const current = groups.get(key)
+
+    if (!current) {
+      groups.set(key, {
+        ...recipient,
+        id: `team-${key}`,
+        name: groupName,
+        team: groupName,
+        members: recipient.members.filter((member) => member.toLocaleLowerCase() !== groupName.toLocaleLowerCase()),
+      })
+      continue
+    }
+
+    current.sourceRow = Math.min(current.sourceRow, recipient.sourceRow)
+    if (recipient.rankNumber !== null && (current.rankNumber === null || recipient.rankNumber < current.rankNumber)) {
+      current.rankNumber = recipient.rankNumber
+      current.rank = recipient.rank
+    }
+    if (!current.email && recipient.email) current.email = recipient.email
+    if (!current.role && recipient.role) current.role = recipient.role
+    for (const member of recipient.members) {
+      if (member.toLocaleLowerCase() !== groupName.toLocaleLowerCase() && !current.members.includes(member)) {
+        current.members.push(member)
+      }
+    }
+  }
+
+  return Array.from(groups.values())
+}
+
 export function buildRecipients(
   rows: SpreadsheetRow[],
   mapping: ColumnMapping,
@@ -151,52 +187,43 @@ export function buildRecipients(
     })
     .filter((recipient): recipient is Recipient => recipient !== null)
 
-  const useTeams = Boolean(mapping.team) && (type === 'top-10' || recipientMode === 'team')
+  const teams = mapping.team ? groupRecipientsByTeam(source) : []
   let recipients = source
 
-  if (useTeams) {
-    const groups = new Map<string, Recipient>()
-
-    for (const recipient of source) {
-      const groupName = recipient.team || recipient.name
-      const key = groupName.trim().toLocaleLowerCase()
-      const current = groups.get(key)
-
-      if (!current) {
-        groups.set(key, {
-          ...recipient,
-          id: `team-${key}`,
-          name: groupName,
-          team: groupName,
-          members: recipient.members.filter((member) => member.toLocaleLowerCase() !== groupName.toLocaleLowerCase()),
+  if (type === 'top-10') {
+    if (mapping.team) {
+      const topTeams = teams
+        .filter((team) => team.rankNumber !== null)
+        .sort((left, right) => {
+          if (left.rankNumber !== right.rankNumber) return (left.rankNumber ?? Infinity) - (right.rankNumber ?? Infinity)
+          return left.name.localeCompare(right.name)
         })
-        continue
-      }
+        .slice(0, 10)
+      const topTeamRanks = new Map(topTeams.map((team) => [team.team.trim().toLocaleLowerCase(), team]))
 
-      current.sourceRow = Math.min(current.sourceRow, recipient.sourceRow)
-      if (recipient.rankNumber !== null && (current.rankNumber === null || recipient.rankNumber < current.rankNumber)) {
-        current.rankNumber = recipient.rankNumber
-        current.rank = recipient.rank
-      }
-      if (!current.email && recipient.email) current.email = recipient.email
-      if (!current.role && recipient.role) current.role = recipient.role
-      for (const member of recipient.members) {
-        if (member.toLocaleLowerCase() !== groupName.toLocaleLowerCase() && !current.members.includes(member)) {
-          current.members.push(member)
-        }
-      }
+      recipients = source
+        .filter((recipient) => topTeamRanks.has((recipient.team || recipient.name).trim().toLocaleLowerCase()))
+        .map((recipient) => {
+          const teamKey = (recipient.team || recipient.name).trim().toLocaleLowerCase()
+          const rankedTeam = topTeamRanks.get(teamKey)!
+          return { ...recipient, rank: rankedTeam.rank, rankNumber: rankedTeam.rankNumber }
+        })
+    } else {
+      recipients = source
+        .filter((recipient) => recipient.rankNumber !== null)
+        .sort((left, right) => {
+          if (left.rankNumber !== right.rankNumber) return (left.rankNumber ?? Infinity) - (right.rankNumber ?? Infinity)
+          return left.name.localeCompare(right.name)
+        })
+        .slice(0, 10)
     }
-
-    recipients = Array.from(groups.values())
+  } else if (mapping.team && recipientMode === 'team') {
+    recipients = teams
   }
 
   if (type === 'first-place' || type === 'second-place' || type === 'third-place') {
     const targetRank = type === 'first-place' ? 1 : type === 'second-place' ? 2 : 3
     recipients = recipients.filter((recipient) => recipient.rankNumber === targetRank)
-  }
-
-  if (type === 'top-10') {
-    recipients = recipients.filter((recipient) => recipient.rankNumber !== null)
   }
 
   if (type === 'coordination' && mapping.role) {
@@ -217,8 +244,6 @@ export function buildRecipients(
       return left.name.localeCompare(right.name)
     })
   }
-
-  if (type === 'top-10') recipients = recipients.slice(0, 10)
 
   return recipients
 }

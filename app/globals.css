@@ -1007,6 +1007,13 @@ select:focus-visible {
   --template-detail-color: #171717;
 }
 
+.template-preview--participation {
+  --template-name-font: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+  --template-name-style: italic;
+  --template-name-weight: 700;
+  --template-name-color: #171717;
+}
+
 .template-preview::before,
 .template-preview::after {
   display: none;
@@ -1043,19 +1050,19 @@ select:focus-visible {
 .template-preview--first-place .template-recipient-name,
 .template-preview--second-place .template-recipient-name,
 .template-preview--third-place .template-recipient-name {
-  top: 38.7%;
+  top: 39.7%;
 }
 
 .template-preview--top-10 .template-recipient-name {
-  top: 37.8%;
+  top: 38.8%;
 }
 
 .template-preview--participation .template-recipient-name {
-  top: 46.4%;
+  top: 47.4%;
 }
 
 .template-preview--coordination .template-recipient-name {
-  top: 43.6%;
+  top: 44.6%;
 }
 
 .template-overlay-field {

@@ -57,10 +57,10 @@ function getRankLabel(type: CertificateType) {
 
 function addRecipientOverlay(document: jsPDF, type: CertificateType, recipient: Recipient) {
   const isPlacement = type === 'first-place' || type === 'second-place' || type === 'third-place'
-  const nameY = type === 'coordination' ? 96 : type === 'participation' ? 104 : type === 'top-10' ? 82 : 84
+  const nameY = type === 'coordination' ? 98 : type === 'participation' ? 106 : type === 'top-10' ? 84 : 86
   const recipientName = recipient.name || recipient.team || 'Recipient name'
 
-  const isModernTemplate = type === 'coordination' || type === 'participation'
+  const isModernTemplate = type === 'coordination'
   const nameColor: [number, number, number] = isPlacement
     ? [41, 36, 79]
     : type === 'coordination'

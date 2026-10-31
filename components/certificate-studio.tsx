@@ -114,9 +114,9 @@ export function CertificateStudio() {
     const hash = window.location.hash.slice(1)
     if (isCertificateType(hash)) {
       setActiveType(hash)
-      setRecipientMode(hash === 'top-10' && Boolean(mapping.team) ? 'team' : 'individual')
+      setRecipientMode('individual')
     }
-  }, [mapping.team])
+  }, [])
 
   useEffect(() => {
     setTypeFromHash()
@@ -132,7 +132,7 @@ export function CertificateStudio() {
     setActiveType(type)
     setFeedback('')
     window.history.pushState(null, '', `#${type}`)
-    setRecipientMode(type === 'top-10' && Boolean(mapping.team) ? 'team' : 'individual')
+    setRecipientMode('individual')
   }
 
   const handleFile = async (file?: File) => {
@@ -545,7 +545,7 @@ export function CertificateStudio() {
                       <ChevronDown size={12} aria-hidden="true" />
                     </span>
                   </label>
-                  {activeType === 'top-10' ? <span className="top-ten-note"><Crown size={12} aria-hidden="true" /> Top 10 {mapping.team ? 'unique teams' : 'recipients'} by rank</span> : null}
+                  {activeType === 'top-10' ? <span className="top-ten-note"><Crown size={12} aria-hidden="true" /> {mapping.team ? 'Top 10 teams by rank · one certificate per student' : 'Top 10 ranked students'}</span> : null}
                 </div>
               </section>
             </div>
