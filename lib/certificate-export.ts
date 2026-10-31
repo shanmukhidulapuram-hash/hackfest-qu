@@ -81,7 +81,7 @@ function addRecipientOverlay(document: jsPDF, type: CertificateType, recipient: 
 
   if (recipient.team) {
     document.setFont('times', 'normal')
-    document.setFontSize(11)
+    document.setFontSize(12)
     const availableWidth = 49
     while (document.getTextWidth(recipient.team) > availableWidth && document.getFontSize() > 7) {
       document.setFontSize(document.getFontSize() - 0.5)
