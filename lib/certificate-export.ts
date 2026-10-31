@@ -60,26 +60,29 @@ function addRecipientOverlay(document: jsPDF, type: CertificateType, recipient: 
   const nameY = type === 'coordination' ? 96 : type === 'participation' ? 104 : type === 'top-10' ? 82 : 84
   const recipientName = recipient.name || recipient.team || 'Recipient name'
 
-  document.setTextColor(36, 35, 70)
-  document.setFont('times', 'bold')
+  const isModernTemplate = type === 'coordination' || type === 'participation'
+  const nameColor: [number, number, number] = isPlacement
+    ? [41, 36, 79]
+    : type === 'coordination'
+      ? [51, 49, 48]
+      : [16, 16, 16]
+
+  document.setTextColor(...nameColor)
+  document.setFont(isModernTemplate ? 'helvetica' : 'times', isModernTemplate ? 'bold' : 'bolditalic')
   document.setFontSize(23)
   const nameLines = document.splitTextToSize(recipientName, 176)
   document.text(nameLines, PAGE_WIDTH / 2, nameY, { align: 'center', lineHeightFactor: 1.1 })
 
   if (!isPlacement) return
 
-  document.setFillColor(255, 255, 255)
-  document.rect(108, 101.2, 25, 7.5, 'F')
-  document.rect(63, 110.6, 53, 7.8, 'F')
-
   document.setTextColor(24, 24, 32)
   document.setFont('times', 'normal')
   document.setFontSize(12)
-  document.text(getRankLabel(type), 120.5, 106.7, { align: 'center' })
+  document.text(getRankLabel(type), 120.5, 105.7, { align: 'center' })
 
   if (recipient.team) {
     document.setFont('times', 'normal')
-    document.setFontSize(10)
+    document.setFontSize(11)
     const availableWidth = 49
     while (document.getTextWidth(recipient.team) > availableWidth && document.getFontSize() > 7) {
       document.setFontSize(document.getFontSize() - 0.5)

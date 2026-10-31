@@ -980,6 +980,31 @@ select:focus-visible {
 .template-preview {
   container-type: inline-size;
   background: #fffdf8;
+  --template-name-font: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+  --template-name-style: italic;
+  --template-name-weight: 700;
+  --template-name-color: #29244f;
+  --template-detail-font: 'Times New Roman', Times, serif;
+  --template-detail-style: normal;
+  --template-detail-weight: 400;
+  --template-detail-color: #1d1c23;
+}
+
+.template-preview--top-10 {
+  --template-name-color: #101010;
+  --template-detail-color: #101010;
+}
+
+.template-preview--coordination,
+.template-preview--participation {
+  --template-name-font: Arial, Helvetica, sans-serif;
+  --template-name-style: normal;
+  --template-name-weight: 700;
+  --template-name-color: #333130;
+  --template-detail-font: Arial, Helvetica, sans-serif;
+  --template-detail-style: normal;
+  --template-detail-weight: 600;
+  --template-detail-color: #171717;
 }
 
 .template-preview::before,
@@ -1003,10 +1028,12 @@ select:focus-visible {
   display: block;
   width: 64%;
   overflow: hidden;
-  color: #252548;
-  font-family: Georgia, 'Times New Roman', serif;
+  color: var(--template-name-color);
+  font-family: var(--template-name-font);
   font-size: clamp(8px, 3.6cqw, 23px);
-  font-weight: 700;
+  font-style: var(--template-name-style);
+  font-weight: var(--template-name-weight);
+  letter-spacing: 0.01em;
   line-height: 1.05;
   text-align: center;
   text-overflow: ellipsis;
@@ -1036,16 +1063,18 @@ select:focus-visible {
   z-index: 1;
   display: block;
   overflow: hidden;
-  background: #fff;
-  color: #1d1c23;
-  font-family: Georgia, 'Times New Roman', serif;
+  background: transparent;
+  color: var(--template-detail-color);
+  font-family: var(--template-detail-font);
+  font-style: var(--template-detail-style);
+  font-weight: var(--template-detail-weight);
   text-align: center;
   text-overflow: clip;
   white-space: nowrap;
 }
 
 .template-place-rank {
-  top: 50.3%;
+  top: 48.5%;
   left: 36.2%;
   width: 8.8%;
   font-size: clamp(6px, 2cqw, 12px);
@@ -1053,10 +1082,10 @@ select:focus-visible {
 }
 
 .template-team-name {
-  top: 54.7%;
+  top: 53.4%;
   left: 21.2%;
   width: 20.5%;
-  font-size: clamp(4px, 1.6cqw, 9px);
+  font-size: clamp(4px, 1.8cqw, 10px);
   line-height: 1.2;
 }
 
