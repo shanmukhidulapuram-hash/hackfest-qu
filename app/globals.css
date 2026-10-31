@@ -1098,7 +1098,7 @@ select:focus-visible {
   top: 53.4%;
   left: 21.2%;
   width: 20.5%;
-  font-size: clamp(4px, 2.4cqw, 13px);
+  font-size: clamp(4px, 2cqw, 11px);
   line-height: 1.2;
 }
 
