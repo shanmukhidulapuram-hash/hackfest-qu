@@ -60,7 +60,6 @@ function addRecipientOverlay(document: jsPDF, type: CertificateType, recipient: 
   const nameY = type === 'coordination' ? 98 : type === 'participation' ? 106 : type === 'top-10' ? 84 : 86
   const recipientName = recipient.name || recipient.team || 'Recipient name'
 
-  const isModernTemplate = type === 'coordination'
   const nameColor: [number, number, number] = isPlacement
     ? [41, 36, 79]
     : type === 'coordination'
@@ -68,7 +67,7 @@ function addRecipientOverlay(document: jsPDF, type: CertificateType, recipient: 
       : [16, 16, 16]
 
   document.setTextColor(...nameColor)
-  document.setFont(isModernTemplate ? 'helvetica' : 'times', isModernTemplate ? 'bold' : 'bolditalic')
+  document.setFont('times', 'bolditalic')
   document.setFontSize(23)
   const nameLines = document.splitTextToSize(recipientName, 176)
   document.text(nameLines, PAGE_WIDTH / 2, nameY, { align: 'center', lineHeightFactor: 1.1 })
